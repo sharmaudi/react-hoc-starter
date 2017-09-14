@@ -38,12 +38,24 @@ const Home = ({isAuthenticated}) => {
     )
 }
 
-const Protected = (props) => {
-        return <div className="App-intro">
-            <p> This is the Protected component.</p>
-            <p> Props: {props.testProp}</p>
-        </div>
-}
+// when the url matches `/tacos` this component renders
+const Protected  = ({ match }) => (
+  // here's a nested div
+  <div>
+    {/* here's a nested Route,
+        match.url helps us make a relative path */}
+    <Route
+      path={match.url + '/1'}
+      render={(props) => (
+          <h1>Protected Page 1</h1>
+      )}/>
+      <Route
+      path={match.url + '/2'}
+      render={(props) => (
+          <h1>Protected Page 2</h1>
+      )}/>
+  </div>
+)
 
 
 const ProtectedWithAuth = auth(Protected)

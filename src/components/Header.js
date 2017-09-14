@@ -1,9 +1,9 @@
 import React from 'react'
 
-import {Collapse, Nav, Navbar, NavbarToggler, NavItem, Button} from 'reactstrap';
+import {Button, Collapse, Nav, Navbar, NavbarToggler, NavItem} from 'reactstrap';
 import {Link} from "react-router-dom"
-import { connect } from 'react-redux'
-import {logout,login} from "../actions/index"
+import {connect} from 'react-redux'
+import {login, logout} from "../actions/index"
 
 class Header extends React.Component {
     constructor(props) {
@@ -23,12 +23,12 @@ class Header extends React.Component {
     loginButton() {
         const {isAuthenticated, login, logout} = this.props
 
-        if(isAuthenticated) {
-           return (
-            <NavItem>
-                <Button color="danger" onClick={logout}>Logout</Button>
-            </NavItem>
-        )
+        if (isAuthenticated) {
+            return (
+                <NavItem>
+                    <Button color="danger" onClick={logout}>Logout</Button>
+                </NavItem>
+            )
         } else {
             return (<NavItem>
                 <Button color="success" onClick={login}>Login</Button>
@@ -39,7 +39,7 @@ class Header extends React.Component {
 
     render() {
 
-        console.log(this.props)
+        const {isAuthenticated} = this.props
         return (
             <div>
                 <Navbar color="faded" light toggleable>
@@ -47,11 +47,7 @@ class Header extends React.Component {
                     <Link className="navbar-brand" to="/">MyApp</Link>
                     <Collapse isOpen={this.state.isOpen} navbar>
 
-                        <Nav navbar>
-                            <NavItem>
-                                <Link className="nav nav-link" to="/protected/">Protected</Link>
-                            </NavItem>
-                        </Nav>
+                        {isAuthenticated && <AuthenticatedOnlyNav/>}
 
                         <Nav className="ml-auto" navbar>
                             {this.loginButton()}
@@ -63,15 +59,26 @@ class Header extends React.Component {
     }
 }
 
+const AuthenticatedOnlyNav = () => (
+    <Nav navbar>
+        <NavItem>
+            <Link className="nav nav-link" to="/protected/1">Page1</Link>
+        </NavItem>
+        <NavItem>
+            <Link className="nav nav-link" to="/protected/2">Page2</Link>
+        </NavItem>
+    </Nav>
+)
 
-function mapStateToProps ({ auth }) {
+
+function mapStateToProps({auth}) {
     return {
         isAuthenticated: auth.isAuthenticated
     }
 }
 
 
-function mapDispatchToProps ( dispatch ) {
+function mapDispatchToProps(dispatch) {
     return {
         login: () => dispatch(login()),
         logout: () => dispatch(logout())
@@ -79,5 +86,5 @@ function mapDispatchToProps ( dispatch ) {
 }
 
 export default connect(
-  mapStateToProps,mapDispatchToProps
+    mapStateToProps, mapDispatchToProps
 )(Header)
